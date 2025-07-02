@@ -6,6 +6,22 @@
         <members>DynamicRecordViewerController</members>
         <name>ApexClass</name>
     </types>
+
+    <types>
+        <members>DynamicRecordViewer</members>
+        <members>RecordViewer</members>
+        <name>LightningComponentBundle</name>
+    </types>
+
+    <types>
+        <members>ObjectConfiguration__mdt</members>
+        <name>CustomObject</name>
+    </types>
+
+    <types>
+        <members>ObjectConfiguration__mdt.*</members>
+        <name>CustomObject</name>
+    </types>
     
     <version>64.0</version>
 </Package>

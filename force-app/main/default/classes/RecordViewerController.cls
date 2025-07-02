@@ -9,7 +9,6 @@ public without sharing class RecordViewerController {
             throw new AuraHandledException('Object type is null');
         }
         
-        // Build query based on object type
         if (sObjectName == 'Account') {
             query = 'SELECT Id, Name, Owner.Name, CreatedBy.Name, LastModifiedBy.Name, CreatedDate, LastModifiedDate, Website FROM Account';
         } else if (sObjectName == 'Contact') {
@@ -20,13 +19,11 @@ public without sharing class RecordViewerController {
             throw new AuraHandledException('Unsupported object type');
         }
 
-        query += ' ORDER BY LastModifiedDate DESC LIMIT 50';
+        query += ' ORDER BY LastModifiedDate DESC LIMIT 100';
 
-        // Run dynamic query
         List<SObject> records = Database.query(query);
         system.debug('records::'+records);
 
-        // Get access info
         Map<Id, UserRecordAccess> accessMap = new Map<Id, UserRecordAccess>();
         if (!records.isEmpty()) {
             Set<Id> recordIds = new Set<Id>();
