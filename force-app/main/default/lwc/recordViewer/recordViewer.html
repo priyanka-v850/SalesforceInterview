@@ -1,0 +1,78 @@
+<template>
+    <lightning-card title="Record Viewer" icon-name="standard:record">
+        <div class="slds-p-horizontal_medium slds-p-vertical_small">
+            <lightning-combobox
+                name="objectSelector"
+                label="Select Object"
+                value={selectedObject}
+                options={objectOptions}
+                onchange={handleObjectChange}>
+            </lightning-combobox>
+
+            <lightning-button
+                label="Submit"
+                variant="brand"
+                onclick={handleSubmit}
+                class="slds-m-top_small">
+            </lightning-button>
+        </div>
+
+        <template if:true={records.length}>
+            <lightning-accordion allow-multiple-sections-open>
+                <!-- Accessible records with expandable sections -->
+                <template for:each={records} for:item="record">
+                    <template if:true={record.hasAccess}>
+                        <lightning-accordion-section
+                            key={record.recordId}
+                            name={record.recordId}
+                            label={record.name}>
+                            
+                            <lightning-record-view-form record-id={record.recordId} object-api-name={selectedObject}>
+                                <lightning-output-field field-name="OwnerId"></lightning-output-field>
+                                <lightning-output-field field-name="CreatedById"></lightning-output-field>
+                                <lightning-output-field field-name="LastModifiedById"></lightning-output-field>
+                                <lightning-output-field field-name="CreatedDate"></lightning-output-field>
+                                <lightning-output-field field-name="LastModifiedDate"></lightning-output-field>
+                                
+                                <!-- Object-specific fields -->
+                                <template if:true={isAccount}>
+                                    <lightning-output-field field-name="Website"></lightning-output-field>
+                                </template>
+                                <template if:true={isContact}>
+                                    <lightning-output-field field-name="Phone"></lightning-output-field>
+                                </template>
+                                <template if:true={isOpportunity}>
+                                    <lightning-output-field field-name="Amount"></lightning-output-field>
+                                </template>
+                            </lightning-record-view-form>
+                        </lightning-accordion-section>
+                    </template>
+                </template>
+            </lightning-accordion>
+
+            <!-- Inaccessible records as plain text rows with lock icon -->
+            <div class="slds-box slds-theme_shade slds-m-top_medium">
+                <template for:each={records} for:item="record">
+                    <template if:false={record.hasAccess}>
+                        <div key={record.recordId} class="slds-p-vertical_x-small slds-border_bottom">
+                            <span>{record.name}</span>
+                            <lightning-icon 
+                                icon-name="utility:lock"
+                                alternative-text="Inaccessible"
+                                title="You do not have access to this record"
+                                size="x-small"
+                                class="slds-m-left_x-small slds-icon-text-warning">
+                            </lightning-icon>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </template>
+
+        <template if:false={records.length}>
+            <template if:true={hasNoRecords}>
+                <p class="slds-p-around_medium slds-text-align_center">No records to display for {selectedObject}.</p>
+            </template>
+        </template>
+    </lightning-card>
+</template>

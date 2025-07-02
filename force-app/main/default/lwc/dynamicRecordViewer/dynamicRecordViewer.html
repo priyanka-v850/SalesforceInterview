@@ -1,0 +1,59 @@
+<template>
+    <lightning-card title="Dynamic Record Viewer" icon-name="standard:record">
+        <div class="slds-p-horizontal_medium slds-p-vertical_small">
+            <lightning-combobox
+                name="objectSelector"
+                label="Select Object"
+                value={selectedObject}
+                options={objectOptions}
+                onchange={handleObjectChange}>
+            </lightning-combobox>
+
+            <lightning-button
+                label="Submit"
+                variant="brand"
+                onclick={handleSubmit}
+                class="slds-m-top_small">
+            </lightning-button>
+        </div>
+
+        <template if:true={records.length}>
+            <lightning-accordion allow-multiple-sections-open>
+                <template for:each={visibleRecords} for:item="record">
+                    <lightning-accordion-section
+                        key={record.recordId}
+                        name={record.recordId}
+                        label={record.name}>
+                        <div class="slds-box slds-theme_default">
+                            <p><strong>ID:</strong> {record.recordId}</p>
+                            <template for:each={record.detailedFields} for:item="field">
+                                <p key={field.fieldName}>
+                                    <strong>{field.fieldName}:</strong> {field.value}
+                                </p>
+                            </template>
+                        </div>
+                    </lightning-accordion-section>
+                </template>
+            </lightning-accordion>
+
+            <div class="slds-box slds-theme_shade slds-m-top_medium">
+                <template for:each={lockedRecords} for:item="record">
+                    <div key={record.recordId} class="slds-p-vertical_x-small slds-border_bottom">
+                        <span>{record.name}</span>
+                        <lightning-icon
+                            icon-name="utility:lock"
+                            alternative-text="Inaccessible"
+                            title="You do not have access to this record"
+                            size="x-small"
+                            class="slds-m-left_x-small slds-icon-text-warning">
+                        </lightning-icon>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={hasNoRecords}>
+            <p class="slds-p-around_medium slds-text-align_center">No records to display.</p>
+        </template>
+    </lightning-card>
+</template>
